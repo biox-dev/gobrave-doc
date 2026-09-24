@@ -29,17 +29,18 @@ Data endpoints are exposed under `/api/v1` and grouped as:
 - `/data/dataset/*`
 - `/data/project-dataset/*`
 - `/data/file/*`
-- `/data/sample/*`
+- `/data/assay/*`
 - `/data/dataset-file/*`
-- `/data/sample-file/*`
-- `/data/dataset-sample/*`
+- `/data/file/list-by-assay` (files owned by one assay; the relation lives on `go_file.assay_id`)
+- `/data/dataset-assay/*`
 
 ## Typical Data Workflow
 
 1. Create project.
 2. Create datasets.
 3. Register samples and files.
-4. Bind sample/file roles (for example FASTQ_R1, FASTQ_R2).
+4. Add files to an assay and give each one a role (for example FASTQ_R1, FASTQ_R2, fasta);
+   workflow inputs are resolved from `go_file.assay_id` + `go_file.role`.
 5. Link assets into dataset relationships.
 6. Build workflow input selectors from these relations.
 

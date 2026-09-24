@@ -195,7 +195,8 @@ Runtime ID 编码格式为：
 
 - 支持的运行时名称：`k8s`、`k3s`。
 - `EnsureImage` 接受拉取策略 `Always` 与 `IfNotPresent`。
-- 预检会拒绝拉取策略 `Never`。
+- 预检会拒绝拉取策略 `Never`（中心侧无法验证 kubelet 本地镜像缓存）。
+- 创建 Pod 时会把镜像的 `pull_policy` 映射为 `container.imagePullPolicy`（`Always` / `IfNotPresent` / `Never`），空值回落 `IfNotPresent`。
 - `Exec` 目前尚未实现。
 - 被删除的 Job 不能以同名工作负载重新启动。
 

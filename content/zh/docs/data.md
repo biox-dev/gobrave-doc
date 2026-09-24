@@ -29,17 +29,17 @@ gobrave 采用项目中心化数据模型，目标是让工作流输入组装可
 - `/data/dataset/*`
 - `/data/project-dataset/*`
 - `/data/file/*`
-- `/data/sample/*`
+- `/data/assay/*`
 - `/data/dataset-file/*`
-- `/data/sample-file/*`
-- `/data/dataset-sample/*`
+- `/data/file/list-by-assay`（某个 Assay 拥有的文件；关联存放在 `go_file.assay_id`）
+- `/data/dataset-assay/*`
 
 ## 典型数据流程
 
 1. 创建项目。
 2. 创建数据集。
 3. 注册样本与文件。
-4. 绑定样本/文件角色（例如 FASTQ_R1、FASTQ_R2）。
+4. 在 Assay 下添加文件并指定角色（例如 FASTQ_R1、FASTQ_R2、fasta）；工作流输入按 `go_file.assay_id` + `go_file.role` 解析。
 5. 建立 dataset 关联关系。
 6. 在工作流中按关系解析输入。
 

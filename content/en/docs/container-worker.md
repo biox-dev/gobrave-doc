@@ -163,7 +163,7 @@ stateDiagram-v2
 
 **Worker**:
 1. Acquires semaphore (controls max concurrency)
-2. Prepares image via `ImageManager`
+2. Reads `image.pull_policy` from the image catalog and passes it to the runtime as `ContainerSpec.PullPolicy` (the `ImageManager` preflight is currently not wired in; Docker pulls before `rt.Create()`, Kubernetes writes it to the Pod's `imagePullPolicy`)
 3. Parses env, volumes, and scheduling constraints
 4. Resolves runtime variables (e.g., `$USERID`, `$WORKSPACE_PATH`)
 5. Calls `rt.Create()` + `rt.Start()`

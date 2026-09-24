@@ -195,7 +195,8 @@ After a terminal event is emitted, the subscription is removed and monitor membe
 
 - Supported runtime names: `k8s`, `k3s`.
 - `EnsureImage` accepts pull policy `Always` and `IfNotPresent`.
-- Pull policy `Never` is rejected for preflight validation.
+- Pull policy `Never` is rejected for preflight validation (the kubelet-local image cache cannot be verified centrally).
+- When creating a Pod, the image's `pull_policy` is mapped to `container.imagePullPolicy` (`Always` / `IfNotPresent` / `Never`); an empty value falls back to `IfNotPresent`.
 - `Exec` is currently not implemented.
 - A deleted Job is not restartable as the same workload.
 

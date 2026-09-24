@@ -158,7 +158,7 @@ stateDiagram-v2
 
 **Worker 处理**:
 1. 获取信号量（控制最大并发数）
-2. 通过 `ImageManager` 准备镜像
+2. 从镜像目录读取 `image.pull_policy`，作为 `ContainerSpec.PullPolicy` 下发给运行时（`ImageManager` 预检当前未接入；docker 在 `rt.Create()` 前按策略 pull，k8s 写入 Pod 的 `imagePullPolicy`）
 3. 解析环境变量、存储卷和调度约束
 4. 解析运行时变量（如 `$USERID`、`$WORKSPACE_PATH`）
 5. 调用 `rt.Create()` + `rt.Start()`
