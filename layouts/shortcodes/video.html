@@ -33,10 +33,22 @@
 {{- $muted := compare.Ne (strings.ToLower (.Get "muted" | compare.Default "true")) "false" -}}
 {{- $controls := compare.Ne (strings.ToLower (.Get "controls" | compare.Default "true")) "false" -}}
 
-{{- /* Keep absolute URLs untouched, resolve everything else against the site root. */ -}}
+{{- /* Resolve a site-relative path against the site baseURL.
+       A leading "/" is trimmed first: urls.RelURL would otherwise treat the
+       path as host-root-relative and drop the GitHub Pages subpath
+       (e.g. https://user.github.io/repo/ -> "/videos/x.mp4" 404s).
+       Fully-qualified (http/https) and protocol-relative (//) URLs pass through. */ -}}
 {{- $srcURL := $src -}}
-{{- if not (strings.HasPrefix $src "http") -}}
-  {{- $srcURL = urls.RelURL $src -}}
+{{- if not (or (strings.HasPrefix $src "http") (strings.HasPrefix $src "//")) -}}
+  {{- $srcURL = urls.RelURL (strings.TrimPrefix "/" $src) -}}
+{{- end -}}
+
+{{- $posterURL := "" -}}
+{{- with $poster -}}
+  {{- $posterURL = . -}}
+  {{- if not (or (strings.HasPrefix . "http") (strings.HasPrefix . "//")) -}}
+    {{- $posterURL = urls.RelURL (strings.TrimPrefix "/" .) -}}
+  {{- end -}}
 {{- end -}}
 
 {{- $label := $title | compare.Default "gobrave demo video" -}}
@@ -54,7 +66,7 @@
       {{- if $loop }} loop{{ end }}
       playsinline
       preload="metadata"
-      {{- with $poster }} poster="{{ . | urls.RelURL }}"{{ end }}
+      {{- with $posterURL }} poster="{{ . }}"{{ end }}
       aria-label="{{ $label }}">
       <source src="{{ $srcURL }}" type="video/mp4">
       Your browser does not support the HTML5 video element.
