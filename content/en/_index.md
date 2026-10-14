@@ -6,6 +6,8 @@ type = 'page'
 layout = 'single'
 +++
 
+{{< video src="/videos/gobrave.mp4" title="Platform demo" caption="One execution model spanning workflow orchestration, runtime control, and data traceability." >}}
+
 ## One Engine. Three Frictions Removed.
 
 Most bioinformatics teams fight the same three frictions:

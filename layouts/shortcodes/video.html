@@ -1,0 +1,66 @@
+{{/*
+  video.html — theme-aware, responsive HTML5 video card.
+
+  Renders a framed video player that follows the site light/dark theme,
+  with rounded corners, hover lift and a soft accent glow (see
+  assets/css/theme.css -> "Video card" section).
+
+  Usage:
+    {{< video src="/videos/gobrave.mp4" >}}
+    {{< video src="/videos/demo.mp4"
+               title="Platform demo"
+               caption="A full **end-to-end** run."
+               ratio="16 / 9"
+               autoplay="false" loop="false" >}}
+
+  Params:
+    src       (required) video path relative to the site root, or an absolute URL
+    title     optional small label rendered above the player
+    caption   optional caption, rendered as Markdown below the player
+    poster    optional poster image, relative to the site root
+    ratio     optional CSS aspect-ratio, defaults to the gobrave demo ratio
+    autoplay, loop, muted, controls  booleans, all default to "true"
+*/}}
+
+{{- $src := .Get "src" -}}
+{{- $title := .Get "title" -}}
+{{- $caption := .Get "caption" -}}
+{{- $poster := .Get "poster" -}}
+{{- $ratio := .Get "ratio" | compare.Default "2408 / 1200" -}}
+
+{{- $autoplay := compare.Ne (strings.ToLower (.Get "autoplay" | compare.Default "true")) "false" -}}
+{{- $loop := compare.Ne (strings.ToLower (.Get "loop" | compare.Default "true")) "false" -}}
+{{- $muted := compare.Ne (strings.ToLower (.Get "muted" | compare.Default "true")) "false" -}}
+{{- $controls := compare.Ne (strings.ToLower (.Get "controls" | compare.Default "true")) "false" -}}
+
+{{- /* Keep absolute URLs untouched, resolve everything else against the site root. */ -}}
+{{- $srcURL := $src -}}
+{{- if not (strings.HasPrefix $src "http") -}}
+  {{- $srcURL = urls.RelURL $src -}}
+{{- end -}}
+
+{{- $label := $title | compare.Default "gobrave demo video" -}}
+
+<figure class="gb-video" style="{{ printf "--gb-video-ratio: %s;" $ratio | safe.CSS }}">
+  {{- with $title }}
+  <figcaption class="gb-video__label">{{ . }}</figcaption>
+  {{- end }}
+  <div class="gb-video__frame">
+    <video
+      class="gb-video__player"
+      {{- if $controls }} controls{{ end }}
+      {{- if $autoplay }} autoplay{{ end }}
+      {{- if $muted }} muted{{ end }}
+      {{- if $loop }} loop{{ end }}
+      playsinline
+      preload="metadata"
+      {{- with $poster }} poster="{{ . | urls.RelURL }}"{{ end }}
+      aria-label="{{ $label }}">
+      <source src="{{ $srcURL }}" type="video/mp4">
+      Your browser does not support the HTML5 video element.
+    </video>
+  </div>
+  {{- with $caption }}
+  <figcaption class="gb-video__caption">{{ . | transform.Markdownify }}</figcaption>
+  {{- end }}
+</figure>

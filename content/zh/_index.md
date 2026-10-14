@@ -6,6 +6,8 @@ type = 'page'
 layout = 'single'
 +++
 
+{{< video src="/videos/gobrave.mp4" title="平台演示" caption="一个执行模型，贯穿工作流编排、运行时控制与数据追踪。" >}}
+
 ## 一个执行引擎，消除三类断层
 
 生信团队普遍会遇到三类断层：
